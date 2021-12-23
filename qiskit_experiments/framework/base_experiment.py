@@ -86,6 +86,8 @@ class BaseExperiment(ABC, StoreInitArgs):
         if isinstance(backend, Backend):
             self._set_backend(backend)
 
+        self.transpiled_circuits = None
+
     @property
     def experiment_type(self) -> str:
         """Return experiment type."""
@@ -235,7 +237,10 @@ class BaseExperiment(ABC, StoreInitArgs):
         experiment._finalize()
 
         # Generate and transpile circuits
-        transpiled_circuits = experiment._transpiled_circuits()
+        if self.transpiled_circuits is None:
+            transpiled_circuits = experiment._transpiled_circuits()
+        else:
+            transpiled_circuits = self.transpiled_circuits
 
         # Initialize result container
         experiment_data = experiment._initialize_experiment_data()
