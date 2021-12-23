@@ -95,6 +95,8 @@ class BaseExperiment(ABC, StoreInitArgs):
         if isinstance(backend, (Backend, BaseBackend)):
             self._set_backend(backend)
 
+        self.transpiled_circuits = None
+
     @property
     def experiment_type(self) -> str:
         """Return experiment type."""
@@ -265,7 +267,10 @@ class BaseExperiment(ABC, StoreInitArgs):
         # Generate and transpile circuits
         transpile_opts = copy.copy(experiment.transpile_options.__dict__)
         transpile_opts["initial_layout"] = list(experiment.physical_qubits)
-        circuits = transpile(experiment.circuits(), experiment.backend, **transpile_opts)
+        if self.transpiled_circuits is None:
+            circuits = transpile(experiment.circuits(), experiment.backend, **transpile_opts)
+        else:
+            circuits = self.transpiled_circuits
         experiment._postprocess_transpiled_circuits(circuits, **run_options)
 
         # Run jobs
