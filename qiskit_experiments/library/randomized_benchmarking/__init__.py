@@ -43,6 +43,7 @@ Analysis
     RBUtils
 """
 from .rb_experiment import StandardRB
+from .double_interleaved_rb_experiment import DoubleInterleavedRB
 from .interleaved_rb_experiment import InterleavedRB
 from .rb_analysis import RBAnalysis
 from .interleaved_rb_analysis import InterleavedRBAnalysis
