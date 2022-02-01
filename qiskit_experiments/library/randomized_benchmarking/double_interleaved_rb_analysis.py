@@ -192,13 +192,8 @@ class DoubleInterleavedRBAnalysis(RBAnalysis):
         alpha_c2 = fit_data.fitval("alpha_c2")
 
         # Calculate epc_est (=r_c^est) - Eq. (4):
-        def comb_err(std1, std2):
-            return np.sqrt(std1**2 + std2**2)
-
-        epc1 = FitVal(value=scale * (1 - alpha_c1.value),
-                      stderr=scale * comb_err(alpha.stderr, alpha_c1.stderr) / alpha.value)
-        epc2 = FitVal(value=scale * (1 - alpha_c2.value),
-                      stderr=scale * comb_err(alpha.stderr, alpha_c2.stderr) / alpha.value)
+        epc1 = FitVal(value=scale * (1 - alpha_c1.value), stderr=scale * alpha_c1.stderr)
+        epc2 = FitVal(value=scale * (1 - alpha_c2.value), stderr=scale * alpha_c2.stderr)
 
         # # Calculate the systematic error bounds - Eq. (5):
         # systematic_err_1 = scale * (abs(alpha.value - alpha_c.value) + (1 - alpha.value))
