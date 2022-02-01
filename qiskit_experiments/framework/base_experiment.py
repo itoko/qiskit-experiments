@@ -271,6 +271,7 @@ class BaseExperiment(ABC, StoreInitArgs):
             circuits = transpile(experiment.circuits(), experiment.backend, **transpile_opts)
         else:
             circuits = self.transpiled_circuits
+            print("Run with transpiled_circuits")
         experiment._postprocess_transpiled_circuits(circuits, **run_options)
 
         # Run jobs
