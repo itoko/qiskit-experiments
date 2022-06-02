@@ -97,7 +97,7 @@ class DoubleInterleavedRB(StandardRB):
             std_circuits = self._generate_circuit(elements, element_lengths)
             for circuit in std_circuits:
                 circuit.metadata["interleaved"] = False
-                # circuit.metadata["pos"] = 0
+                circuit.metadata["pos"] = 0
             circuits += std_circuits
 
             int_elements = []
@@ -109,7 +109,7 @@ class DoubleInterleavedRB(StandardRB):
             int_circuits = self._generate_circuit(int_elements, int_elements_lengths)
             for circuit in int_circuits:
                 circuit.metadata["interleaved"] = True
-                # circuit.metadata["pos"] = 1
+                circuit.metadata["pos"] = 1
                 circuit.metadata["xval"] = circuit.metadata["xval"] // 2
             circuits += int_circuits
 
@@ -122,7 +122,7 @@ class DoubleInterleavedRB(StandardRB):
             int_circuits = self._generate_circuit(int_elements, int_elements_lengths)
             for circuit in int_circuits:
                 circuit.metadata["interleaved"] = True
-                # circuit.metadata["pos"] = 2
+                circuit.metadata["pos"] = 2
                 circuit.metadata["xval"] = circuit.metadata["xval"] // 2
             circuits += int_circuits
 

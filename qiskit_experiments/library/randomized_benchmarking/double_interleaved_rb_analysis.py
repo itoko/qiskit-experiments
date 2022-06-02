@@ -33,7 +33,7 @@ class DoubleInterleavedRBAnalysis(RBAnalysis):
             fit_func=lambda x, a, alpha, alpha_c1, alpha_c2, b: curve.fit_function.exponential_decay(
                 x, amp=a, lamb=-1.0, base=alpha, baseline=b
             ),
-            filter_kwargs={"interleaved": 0},
+            filter_kwargs={"interleaved": False, "pos": 0},
             plot_color="red",
             plot_symbol=".",
             model_description=r"a \alpha^{x} + b",
@@ -43,7 +43,7 @@ class DoubleInterleavedRBAnalysis(RBAnalysis):
             fit_func=lambda x, a, alpha, alpha_c1, alpha_c2, b: curve.fit_function.exponential_decay(
                 x, amp=a, lamb=-1.0, base=alpha * alpha_c1, baseline=b
             ),
-            filter_kwargs={"interleaved": 1},
+            filter_kwargs={"interleaved": True, "pos": 1},
             plot_color="orange",
             plot_symbol="^",
             model_description=r"a (\alpha_c1\alpha)^{x} + b",
@@ -53,7 +53,7 @@ class DoubleInterleavedRBAnalysis(RBAnalysis):
             fit_func=lambda x, a, alpha, alpha_c1, alpha_c2, b: curve.fit_function.exponential_decay(
                 x, amp=a, lamb=-1.0, base=alpha * alpha_c2, baseline=b
             ),
-            filter_kwargs={"interleaved": 2},
+            filter_kwargs={"interleaved": True, "pos": 2},
             plot_color="green",
             plot_symbol="^",
             model_description=r"a (\alpha_c2\alpha)^{x} + b",
