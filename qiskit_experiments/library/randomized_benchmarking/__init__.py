@@ -47,6 +47,7 @@ Utilities
     CliffordUtils
 """
 from .standard_rb import StandardRB
+from .double_interleaved_rb_experiment import DoubleInterleavedRB
 from .interleaved_rb_experiment import InterleavedRB
 from .rb_analysis import RBAnalysis
 from .interleaved_rb_analysis import InterleavedRBAnalysis
