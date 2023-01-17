@@ -289,9 +289,8 @@ class StandardRB(BaseExperiment, RestlessMixin):
             return rng.integers(CliffordUtils.NUM_CLIFFORD_1_QUBIT, size=length)
         if self.num_qubits == 2:
             return rng.integers(CliffordUtils.NUM_CLIFFORD_2_QUBIT, size=length)
-        # Return circuit object instead of Clifford object for 3 or more qubits case for speed
-        # TODO: Revisit after terra#7269, #7483, #8585
-        return [random_clifford(self.num_qubits, rng).to_circuit() for _ in range(length)]
+        # Return Clifford object for 3 or more qubits case
+        return [random_clifford(self.num_qubits, rng) for _ in range(length)]
 
     def _to_instruction(
         self, elem: SequenceElementType, basis_gates: Optional[Tuple[str, ...]] = None
@@ -317,12 +316,11 @@ class StandardRB(BaseExperiment, RestlessMixin):
             return functools.reduce(
                 compose_1q if self.num_qubits == 1 else compose_2q, elements, base_elem
             )
-        # 3 or more qubits: compose Clifford from circuits for speed
-        # TODO: Revisit after terra#7269, #7483, #8585
-        circ = QuantumCircuit(self.num_qubits)
+        # 3 or more qubits
+        ret_elem = base_elem
         for elem in elements:
-            circ.compose(elem, inplace=True)
-        return base_elem.compose(Clifford.from_circuit(circ))
+            ret_elem = ret_elem.compose(elem)
+        return ret_elem
 
     def __adjoint_clifford(self, op: SequenceElementType) -> SequenceElementType:
         if self.num_qubits == 1:
