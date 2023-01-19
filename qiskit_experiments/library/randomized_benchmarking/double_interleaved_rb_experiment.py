@@ -150,9 +150,10 @@ class DoubleInterleavedRB(StandardRB):
         elif self.num_qubits == 2:
             self._interleaved_cliff_1 = num_from_2q_circuit(interleaved_clifford_1.to_circuit())
             self._interleaved_cliff_2 = num_from_2q_circuit(interleaved_clifford_2.to_circuit())
+        # Convert interleaved element to circuit for speed in 3Q or more case
         else:
-            self._interleaved_cliff_1 = interleaved_clifford_1
-            self._interleaved_cliff_2 = interleaved_clifford_2
+            self._interleaved_cliff_1 = interleaved_clifford_1.to_circuit()
+            self._interleaved_cliff_2 = interleaved_clifford_2.to_circuit()
         self._interleaved_element_1 = first_interleaved_op  # Original interleaved element
         self._interleaved_element_2 = second_interleaved_op  # Original interleaved element
         self._interleaved_op_1 = None  # Transpiled interleaved element for speed
