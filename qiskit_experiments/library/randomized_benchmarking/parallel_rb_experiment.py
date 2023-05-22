@@ -39,7 +39,6 @@ class ParallelStandardRB(ParallelExperiment):
         num_samples: int = 3,
         seed: Optional[Union[int, SeedSequence, BitGenerator, Generator]] = None,
         full_sampling: Optional[bool] = True,
-        parallel_full_sampling: Optional[bool] = False,
     ):
         """Initialize a parallel standard randomized benchmarking experiment.
 
@@ -60,9 +59,6 @@ class ParallelStandardRB(ParallelExperiment):
                            If False for sample of lengths longer sequences are constructed
                            by appending additional samples to shorter sequences.
                            The default is True.
-            parallel_full_sampling: If True, a different Clifford sequence is sampled for each qubit.
-                           If False, a common Clifford sequence is used for all qubits.
-                           The default is False.
 
         Raises:
             QiskitError: if any invalid argument is supplied.
@@ -80,8 +76,6 @@ class ParallelStandardRB(ParallelExperiment):
 
         experiments = []
         for i, qubits in enumerate(qubits_list):
-            if parallel_full_sampling:
-                seed = seed + i
             srb = StandardRB(
                 physical_qubits=qubits,
                 lengths=lengths,
@@ -101,12 +95,7 @@ class ParallelStandardRB(ParallelExperiment):
             flatten_results=False
         )
 
-        self._parallel_full_sampling = parallel_full_sampling
-
     def circuits(self):
-        if self._parallel_full_sampling:
-            return super()._combined_circuits(device_layout=False)
-
         # Use common circuits for all qubits
         common_circuits = self._experiments[0].circuits()
         num_qubits = 1 + max(self.physical_qubits)
@@ -117,7 +106,6 @@ class ParallelStandardRB(ParallelExperiment):
             circuit = QuantumCircuit(num_qubits, name=f"parallel_exp_{circ_idx}", metadata={})
             for sub_exp in self._experiments:
                 circuit = _circuit_compose(circuit, sub_circ, qubits=sub_exp.physical_qubits)
-                # circuit.compose(sub_circ, qubits=sub_exp.physical_qubits, inplace=True)
             circuit.measure_all()
 
             # Add subcircuit metadata
@@ -142,7 +130,4 @@ class ParallelStandardRB(ParallelExperiment):
         return joint_circuits
 
     def _transpiled_circuits(self):
-        if self._parallel_full_sampling:
-            return super()._combined_circuits(device_layout=True)
-
         return self.circuits()
