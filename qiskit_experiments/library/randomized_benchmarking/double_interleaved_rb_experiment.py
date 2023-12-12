@@ -13,6 +13,7 @@
 Double Interleaved RB Experiment class.
 """
 import copy
+import itertools
 import warnings
 from typing import Union, Iterable, Optional, List, Sequence, Tuple
 
@@ -114,7 +115,9 @@ class DoubleInterleavedRB(StandardRB):
         if isinstance(first_interleaved_op, Delay):
             delay_ops = [first_interleaved_op]
         elif isinstance(first_interleaved_op, QuantumCircuit):
-            delay_ops = [delay.operation for delay in first_interleaved_op.get_instructions("delay")]
+            delay_ops = [
+                delay.operation for delay in first_interleaved_op.get_instructions("delay")
+            ]
         if delay_ops:
             timing = BackendTiming(backend)
         for delay_op in delay_ops:
@@ -218,7 +221,12 @@ class DoubleInterleavedRB(StandardRB):
                 "interleaved": True,
                 "pos": 2,
             }
-        return reference_circuits + interleaved_circuits_1 + interleaved_circuits_2
+            # Default order: RIIRIIRII
+        return list(
+            itertools.chain.from_iterable(
+                zip(reference_circuits, interleaved_circuits_1, interleaved_circuits_2)
+            )
+        )
 
     def _to_instruction(
         self, elem: SequenceElementType, basis_gates: Optional[Tuple[str]] = None
